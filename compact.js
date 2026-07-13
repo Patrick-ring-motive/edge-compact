@@ -15,6 +15,8 @@
 // transform (e.g. "Run"/"run" collapsing after lowercasing) are exploited
 // for extra compression, not wasted.
 
+const isArray = x => Array.isArray(x) || x instanceof Array;
+const isString = x => typeof x === 'string' || x instanceof String;
 const unique = (x) => [...new Set(x)];
 
 const tecodeComponent = (x) => {
@@ -40,29 +42,31 @@ const encode = encoder.encode.bind(encoder);
 const decoder = new TextDecoder();
 const decode = decoder.decode.bind(decoder);
 
+const arr2str = x => isArray(x) ? x.flat().join(' ') : x;
+
 const sentenceSegment = Intl.Segmenter.prototype.segment.bind(
   new Intl.Segmenter("en", { granularity: "sentence" }),
 );
-const sentences = (x) => [...sentenceSegment(x)].map((s) => s.segment);
+const sentences = (x) => [...sentenceSegment(arr2str(x))].map((s) => s.segment);
 
 const uniqueSentences = x => unique(sentences(x));
 
 const wordSegment = Intl.Segmenter.prototype.segment.bind(
   new Intl.Segmenter("en", { granularity: "word" }),
 );
-const words = (x) => [...wordSegment(x)].map((s) => s.segment);
+const words = (x) => [...wordSegment(arr2str(x))].map((s) => s.segment);
 
 // Truncate the last character off word-like tokens only; leaves
 // whitespace/punctuation segments untouched so spacing is preserved.
 const trunc = (x) =>
-  words(x)
+  words(arr2str(x))
     .map((y) => (/^\w+$/.test(y) ? y.slice(0, -1) : y))
     .join("");
 
 const runeSegment = Intl.Segmenter.prototype.segment.bind(
   new Intl.Segmenter("en", { granularity: "grapheme" }),
 );
-const runes = (x) => [...runeSegment(x)].map((s) => s.segment);
+const runes = (x) => [...runeSegment(arr2str(x))].map((s) => s.segment);
 
 const uniqueRunes = x =>unique(runes(x));
 
@@ -72,7 +76,7 @@ const bits = (x) => String.fromCharCode(...encode(x)); // raw UTF-8 bytes as cha
 
 
 
-const pieces = x => decodeComponent(x)
+const pieces = x => decodeComponent(arr2str(x))
     .split(/[_+\-\s]+/s)
     .map(sentences).flat()
     .map((x) => x.trim())
