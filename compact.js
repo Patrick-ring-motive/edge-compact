@@ -38,6 +38,11 @@ const encode = encoder.encode.bind(encoder);
 const decoder = new TextDecoder();
 const decode = decoder.decode.bind(decoder);
 
+const sentenceSegment = Intl.Segmenter.prototype.segment.bind(
+  new Intl.Segmenter("en", { granularity: "sentence" }),
+);
+const sentences = (x) => [...sentenceSegment(x)].map((s) => s.segment);
+
 const wordSegment = Intl.Segmenter.prototype.segment.bind(
   new Intl.Segmenter("en", { granularity: "word" }),
 );
@@ -72,6 +77,8 @@ export const edgeCompact = (txt, options) => {
     .map((x) => x.trim())
     .filter(Boolean)
     .join(" ");
+
+  txt = unique(sentences(txt)).join(''):
 
   const target = options?.length || txt.length * 0.8;
 
