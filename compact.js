@@ -15,6 +15,8 @@
 // transform (e.g. "Run"/"run" collapsing after lowercasing) are exploited
 // for extra compression, not wasted.
 
+const unique = (x) => [...new Set(x)];
+
 const tecodeComponent = (x) => {
   try {
     return decodeURIComponent(x);
@@ -43,6 +45,8 @@ const sentenceSegment = Intl.Segmenter.prototype.segment.bind(
 );
 const sentences = (x) => [...sentenceSegment(x)].map((s) => s.segment);
 
+const uniqueSentences = x => unique(sentences(x));
+
 const wordSegment = Intl.Segmenter.prototype.segment.bind(
   new Intl.Segmenter("en", { granularity: "word" }),
 );
@@ -60,17 +64,21 @@ const runeSegment = Intl.Segmenter.prototype.segment.bind(
 );
 const runes = (x) => [...runeSegment(x)].map((s) => s.segment);
 
+const uniqueRunse = x =>unique(runes(x));
+
 const codes = (x) => [...x]; // codepoint-level iteration
 const chars = (x) => x.split(""); // UTF-16 code-unit level
 const bits = (x) => String.fromCharCode(...encode(x)); // raw UTF-8 bytes as char codes
 
-const unique = (x) => [...new Set(x)];
+
 
 const pieces = x => decodeComponent(x)
     .split(/[_+\-\s]+/s)
     .map(sentences).flat()
     .map((x) => x.trim())
-    .filter(Boolean)
+    .filter(Boolean);
+
+const uniquePieces = x=>unique(pieces(x));
 
 /**
  * @param {string} txt
@@ -85,17 +93,26 @@ export const edgeCompact = (txt, options) => {
   const target = options?.length || txt.length * 0.8;
 
   let comp = txt;
-  comp = unique(pieces(comp)).join(" ");
-  comp = unique(pieces(comp)).join(" ");
+
+  comp = sentences(comp).map(uniquePieces).join(' ');
+
+  if (comp.length < target) return comp;
+  
+  comp = uniquePieces(comp).join(" ");
+
   if (comp.length < target) return comp;
 
   comp = comp.normalize("NFKD").toLowerCase();
-  comp = unique(pieces(comp)).join(" ");
+  comp = uniquePieces(comp).join(" ");
+  if (comp.length < target) return comp;
+
+  comp = uniquePieces(words(comp).map(uniqueRunes).join('')).join(' ');
+
   if (comp.length < target) return comp;
 
   while(/\w/.test(comp)){
     comp = trunc(comp);
-    comp = unique(pieces(comp)).join(" ");
+    comp = uniquePieces(comp).join(" ");
     if (comp.length < target) return comp;
   }
     
