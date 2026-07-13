@@ -28,6 +28,6 @@
 
       const CORPUS = await getCorpus('https://patrick-ring-motive.github.io/tolkienizer/fellowship.txt');
       const compact = await import('compact.js');
-      document.querySelector('pre').innerText = compact(CORPUS);
+      document.querySelector('pre').innerText = (compact?.edgeCompact??compact)(CORPUS.join(''));
     })();
 </script>
