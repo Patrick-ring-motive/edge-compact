@@ -1,0 +1,32 @@
+<pre></pre>
+<script>
+    (async () => {
+      /* ---------- toy corpus: 4 loose topics, kept tiny on purpose ---------- */
+      const fetchText = async (...args) => {
+        let txt;
+        try {
+          const res = await fetch(...args)
+          txt = res.statusText || '';
+          txt = await res.text();
+          return txt;
+        } catch (e) {
+          return txt || String(e);
+        }
+      };
+
+      const getCorpus = async (...args) => {
+
+        const txt = await fetchText(...args);
+
+        const segmenter = new Intl.Segmenter("en", {
+          granularity: "sentence"
+        });
+
+        return [...segmenter.segment(txt.replaceAll(/\n|¬/g, ''))].map(x => x.segment.trim()).filter(Boolean);
+
+      };
+
+      const CORPUS = await getCorpus('https://patrick-ring-motive.github.io/tolkienizer/fellowship.txt');
+
+    })();
+</script>
