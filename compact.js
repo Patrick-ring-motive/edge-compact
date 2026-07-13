@@ -88,13 +88,13 @@ const uniquePieces = x=>unique(pieces(x));
 export const edgeCompact = (txt, options) => {
   txt = pieces(txt).join(" ");
 
-  txt = unique(sentences(txt)).join(' ');
+  txt = uniqueSentences(txt).join(' ');
   
   const target = options?.length || txt.length * 0.8;
 
   let comp = txt;
 
-  comp = sentences(comp).map(uniquePieces).flat().join(' ');
+  comp = uniqueSentences(sentences(comp).map(uniquePieces).flat().join(' ')).join(' ');
 
   if (comp.length < target) return comp;
   
@@ -106,13 +106,13 @@ export const edgeCompact = (txt, options) => {
   comp = uniquePieces(comp).join(" ");
   if (comp.length < target) return comp;
 
-  comp = uniquePieces(words(comp).map(uniqueRunes).join('')).join(' ');
+  comp = uniqueSentences(uniquePieces(words(comp).map(uniqueRunes).join('')).join(' ')).join(' ');
 
   if (comp.length < target) return comp;
 
   while(/\w/.test(comp)){
     comp = trunc(comp);
-    comp = uniquePieces(comp).join(" ");
+    comp = uniqueSentences(uniquePieces(comp).join(" ")).join(' ');
     if (comp.length < target) return comp;
   }
     
