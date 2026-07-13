@@ -64,7 +64,7 @@ const runeSegment = Intl.Segmenter.prototype.segment.bind(
 );
 const runes = (x) => [...runeSegment(x)].map((s) => s.segment);
 
-const uniqueRunse = x =>unique(runes(x));
+const uniqueRunes = x =>unique(runes(x));
 
 const codes = (x) => [...x]; // codepoint-level iteration
 const chars = (x) => x.split(""); // UTF-16 code-unit level
@@ -94,7 +94,7 @@ export const edgeCompact = (txt, options) => {
 
   let comp = txt;
 
-  comp = sentences(comp).map(uniquePieces).join(' ');
+  comp = sentences(comp).map(uniquePieces).flat().join(' ');
 
   if (comp.length < target) return comp;
   
