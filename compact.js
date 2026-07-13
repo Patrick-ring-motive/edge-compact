@@ -78,7 +78,7 @@ export const edgeCompact = (txt, options) => {
     .filter(Boolean)
     .join(" ");
 
-  txt = unique(sentences(txt)).join(''):
+  txt = unique(sentences(txt)).join('');
 
   const target = options?.length || txt.length * 0.8;
 
