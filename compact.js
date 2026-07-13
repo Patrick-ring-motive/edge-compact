@@ -81,10 +81,11 @@ export const edgeCompact = (txt, options) => {
   txt = pieces(txt).join(" ");
 
   txt = unique(sentences(txt)).join(' ');
-
+  
   const target = options?.length || txt.length * 0.8;
 
   let comp = txt;
+  comp = unique(pieces(comp)).join(" ");
   comp = unique(pieces(comp)).join(" ");
   if (comp.length < target) return comp;
 
