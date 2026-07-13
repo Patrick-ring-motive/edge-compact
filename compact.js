@@ -83,10 +83,12 @@ export const edgeCompact = (txt, options) => {
   comp = unique(comp.split(" ")).join(" ");
   if (comp.length < target) return comp;
 
-  comp = trunc(comp);
-  comp = unique(comp.split(" ")).join(" ");
-  if (comp.length < target) return comp;
-
+  while(/\w/.test(comp)){
+    comp = trunc(comp);
+    comp = unique(comp.split(" ")).join(" ");
+    if (comp.length < target) return comp;
+  }
+    
   for (const shorten of [runes, codes, chars, bits]) {
     comp = unique(shorten(comp)).join("");
     if (comp.length < target) return comp;
