@@ -1,5 +1,15 @@
-<html><body><code><pre></pre></code>
-<script>
+<html><body><code><pre class="wrap-text"></pre></code>
+<style>
+.wrap-text {
+ max-width: 100vw;
+  /* Modern standard */
+  overflow-wrap: break-word; 
+  /* Legacy alias for older browsers */
+  word-wrap: break-word;       
+}
+
+</style>
+    <script>
     (async () => {
       /* ---------- toy corpus: 4 loose topics, kept tiny on purpose ---------- */
       const fetchText = async (...args) => {
