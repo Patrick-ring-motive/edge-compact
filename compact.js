@@ -10,7 +10,7 @@
 //      re-dedup — cheap stemming-adjacent compression
 //   4. unique graphemes -> unique codepoints -> unique chars -> unique bytes
 //   5. hard slice to target as last resort
-//
+//  
 // Each rung dedups *after* transforming, so collisions introduced by the
 // transform (e.g. "Run"/"run" collapsing after lowercasing) are exploited
 // for extra compression, not wasted.
