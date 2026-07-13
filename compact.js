@@ -66,34 +66,35 @@ const bits = (x) => String.fromCharCode(...encode(x)); // raw UTF-8 bytes as cha
 
 const unique = (x) => [...new Set(x)];
 
+const pieces = x => decodeComponent(x)
+    .split(/[_+\-\s]+/s)
+    .map(sentences).flat()
+    .map((x) => x.trim())
+    .filter(Boolean)
+
 /**
  * @param {string} txt
  * @param {{ length?: number }} [options] target length; defaults to 80% of input length
  * @returns {string}
  */
 export const edgeCompact = (txt, options) => {
-  txt = decodeComponent(txt)
-    .split(/[_+\-\s]+/)
-    .map(sentences).flat()
-    .map((x) => x.trim())
-    .filter(Boolean)
-    .join(" ");
+  txt = pieces(txt).join(" ");
 
-  txt = unique(sentences(txt)).join('');
+  txt = unique(sentences(txt)).join(' ');
 
   const target = options?.length || txt.length * 0.8;
 
   let comp = txt;
-  comp = unique(comp.split(" ")).join(" ");
+  comp = unique(pieces(comp)).join(" ");
   if (comp.length < target) return comp;
 
   comp = comp.normalize("NFKD").toLowerCase();
-  comp = unique(comp.split(" ")).join(" ");
+  comp = unique(pieces(comp)).join(" ");
   if (comp.length < target) return comp;
 
   while(/\w/.test(comp)){
     comp = trunc(comp);
-    comp = unique(comp.split(" ")).join(" ");
+    comp = unique(pieces(comp)).join(" ");
     if (comp.length < target) return comp;
   }
     
