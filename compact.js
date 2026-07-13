@@ -74,6 +74,7 @@ const unique = (x) => [...new Set(x)];
 export const edgeCompact = (txt, options) => {
   txt = decodeComponent(txt)
     .split(/[_+\-\s]+/)
+    .map(sentences).flat()
     .map((x) => x.trim())
     .filter(Boolean)
     .join(" ");
