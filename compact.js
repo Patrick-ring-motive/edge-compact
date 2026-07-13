@@ -25,7 +25,19 @@ const wordSegment = Intl.Segmenter.prototype.segment.bind(new Intl.Segmenter("en
 }));
 const words = x => [...wordSegment(x)].map(x => x.segment);
 
-const trunc = x => words(x).map(y=>/^\w+$/.test(y)?y.slice(0,-1):y)
+const trunc = x => words(x).map(y=>/^\w+$/.test(y)?y.slice(0,-1):y).join('');
+
+const runeSegment = Intl.Segmenter.prototype.segment.bind(new Intl.Segmenter("en", {
+  granularity: "grapheme"
+}));
+
+const runes = x => [...runeSegment(x)].map(x => x.segment);
+
+const codes = x => [...x];
+
+const chars = x => x.split('');
+
+const bits = x => String.fromCharCode(...encode(x));
 
 const unique = x => [...new Set(x)];
 
@@ -37,4 +49,21 @@ export const edgeCompact = (txt,options) =>{
   if(comp.length < target){
     return comp;
   }
+  comp = comp.normalize('NFKD').toLowerCase();
+  comp = unique(comp.split(' ')).join(' ');
+  if(comp.length < target){
+    return comp;
+  }
+  comp = trunc(comp);
+  comp = unique(comp.split(' ')).join(' ');
+  if(comp.length < target){
+    return comp;
+  }
+for(const short of [runes,codes,chars,bits]){
+  comp = unique(short(comp)).join('');
+  if(comp.length < target){
+    return comp;
+  }
+}
+return comp.slice(target);
 };
