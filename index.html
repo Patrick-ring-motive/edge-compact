@@ -1,15 +1,19 @@
-<html><body><code><pre class="wrap-text"></pre></code>
-<style>
-.wrap-text {
- max-width: 100vw;
-  /* Modern standard */
-  overflow-wrap: break-word; 
-  /* Legacy alias for older browsers */
-  word-wrap: break-word;       
-}
+<html>
 
-</style>
-    <script>
+<body><code>
+    <pre class="wrap-text"></pre>
+  </code>
+  <style>
+    .wrap-text {
+      max-width: 100vw;
+      /* Modern standard */
+      overflow-wrap: break-word;
+      /* Legacy alias for older browsers */
+      word-wrap: break-word;
+    }
+
+  </style>
+  <script>
     (async () => {
       /* ---------- toy corpus: 4 loose topics, kept tiny on purpose ---------- */
       const fetchText = async (...args) => {
@@ -37,9 +41,12 @@
       };
 
       const CORPUS = await getCorpus('https://patrick-ring-motive.github.io/tolkienizer/fellowship.txt');
-      const compact = await import('https://patrick-ring-motive.github.io/edge-compact/compact.js?'+new Date().getTime());
-      document.querySelector('pre').innerText = (compact?.edgeCompact??compact)(CORPUS.join(''))
-       .split('.').join('.\n');
+      const compact = await import('https://patrick-ring-motive.github.io/edge-compact/compact.js?' + new Date().getTime());
+      document.querySelector('pre').innerText = (compact?.edgeCompact ?? compact)(CORPUS.join(''))
+        .split('.').join('.\n');
     })();
-</script>
-</body></html>
+
+  </script>
+</body>
+
+</html>
