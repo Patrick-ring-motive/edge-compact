@@ -133,7 +133,7 @@ export const edgeCompact = (txt, options) => {
 };
 
 const compactMessages = (messages,options)=>{
-  const target = options?.length || txt.length * 0.8;
+  const target = options?.length || JSON.stringify(messages).length * 0.8;
   const msgs = messages.filter(x=>x?.role !== 'system');
   while(JSON.stringify(messages).length > target){
     const sizes = msgs.map(x=>(x?.content?.length||0));
