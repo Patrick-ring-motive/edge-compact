@@ -131,3 +131,17 @@ export const edgeCompact = (txt, options) => {
 
   return comp.slice(0, target);
 };
+
+const compactMessages = (messages,options)=>{
+  const target = options?.length || txt.length * 0.8;
+  const msgs = messages.filter(x=>x?.role !== 'system');
+  while(JSON.stringify(messages).length > target){
+    const sizes = msgs.map(x=>(x?.content?.length||0));
+    const max = Math.max(...sizes)||0;
+    const maxMessages = msgs.filter(x=>(x?.content?.length === max));
+    for(const msg of maxMessages){
+      (msg??{}).content = edgeCompact(String(msg?.content||''));
+    }
+  }
+  return messages;
+};
